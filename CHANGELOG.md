@@ -2,12 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.1.2]
 
 ### Added
 
 - Auto-configuration of generated Symfony projects: `app/.env.local` is now populated with `DATABASE_URL` (MariaDB, MySQL, or PostgreSQL), `MAILER_DSN`, `DEFAULT_URI`, and `NOREPLY_EMAIL`, matching the scaffolded Docker services.
 - `docs/` reference documentation: architecture, development workflow, versioning, release process, templates, roadmap, and generated project structure.
+- Continuous integration via GitHub Actions (`.github/workflows/ci.yml`): runs on every push and pull request, checks formatting (`go fmt`), `go vet`, `go test`, and `go build`.
 
 ### Changed
 

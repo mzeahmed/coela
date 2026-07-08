@@ -1,0 +1,49 @@
+# Continuous integration: verifies every push and pull request builds,
+# is formatted, passes go vet, and passes the test suite. See
+# docs/development.md for what each Go command below does locally.
+name: CI
+
+# Run on every push and every pull request, regardless of branch.
+on:
+  push:
+  pull_request:
+
+# Read-only checkout is all this workflow needs.
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          # Reads the Go version from go.mod instead of hardcoding one here,
+          # so this workflow can never drift out of sync with the module.
+          go-version-file: go.mod
+          # Caches module downloads and build output between runs.
+          cache: true
+
+      - name: Format
+        run: go fmt ./...
+
+      - name: Check formatting
+        # go fmt above rewrites any misformatted file in place. If it
+        # touched anything, the checkout is now dirty and this diff is
+        # non-empty, which fails the step (git diff --exit-code returns 1
+        # when there are differences).
+        run: git diff --exit-code
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        run: go test ./...
+
+      - name: Build
+        run: go build ./...
