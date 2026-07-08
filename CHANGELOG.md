@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.1.1] - 2026-07-08
+
+### Fixed
+
+- release CI has uncorrect env secret name
+
 ## [v0.1.0] - 2026-07-08
 
 ### Added
