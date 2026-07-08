@@ -38,4 +38,4 @@ jobs:
           version: latest
           args: release --clean
         env:
-          COELA_CI_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COELA_CI_TOKEN: ${{ secrets.COELA_CI_TOKEN }}
