@@ -1,0 +1,289 @@
+# {{ .Name }}
+
+A Symfony project running on Docker, scaffolded with StackForge.
+
+---
+
+## Tech Stack
+
+### Backend
+
+* PHP {{ .PHPVersion }}
+* Symfony
+
+### Infrastructure
+
+* Docker Compose
+{{- if .Traefik }}
+* Traefik v3
+{{- end }}
+* Nginx
+* {{ .Database }}
+{{- if .Redis }}
+* Redis
+{{- end }}
+{{- if .Mailpit }}
+* Mailpit
+{{- end }}
+
+---
+{{ if .Traefik -}}
+## Local Domains
+
+The application uses HTTPS locally.
+
+Available domains:
+
+```text
+https://{{ .Name }}.local
+{{- if .Mailpit }}
+https://mail.{{ .Name }}.local
+{{- end }}
+https://db.{{ .Name }}.local
+```
+
+Traefik sits in front of the stack as a reverse proxy. It:
+
+* Terminates HTTPS using the local certificates generated with mkcert.
+* Redirects all HTTP traffic to HTTPS.
+* Routes each domain to the right container based on Host rules declared as
+  Docker labels in `docker-compose.yml` (e.g. `{{ .Name }}.local` -> nginx{{ if .Mailpit }}, `mail.{{ .Name }}.local` -> Mailpit{{ end }}).
+
+This avoids exposing container ports directly and lets multiple services
+share ports 80/443 under different local domains.
+
+These domains do not resolve on their own: you need to edit `/etc/hosts` to
+point them to `127.0.0.1` (see [Configure Hosts](#configure-hosts)).
+
+---
+{{ end -}}
+## Requirements
+
+* Docker
+* Docker Compose
+* GNU Make
+{{- if .Traefik }}
+* mkcert
+{{- end }}
+
+---
+
+## Installation
+
+### Clone the repository
+
+```bash
+git clone <your-repository-url>
+
+cd {{ .Name }}
+```
+
+### Configure Git Hooks
+
+```bash
+make setup
+```
+{{ if .Traefik -}}
+### Install Local SSL Authority
+
+```bash
+mkcert -install
+```
+
+### Generate Local Certificates
+
+```bash
+mkdir -p certs
+
+cd certs
+
+mkcert {{ .Name }}.local "*.{{ .Name }}.local"
+```
+
+### Configure Hosts
+
+```bash
+make hosts
+```
+
+This adds the required domains to `/etc/hosts` (asks for your `sudo`
+password) and is safe to run multiple times: entries already present are
+left untouched.
+
+To do it manually instead, edit `/etc/hosts` and add:
+
+```text
+127.0.0.1 {{ .Name }}.local
+{{- if .Mailpit }}
+127.0.0.1 mail.{{ .Name }}.local
+{{- end }}
+127.0.0.1 db.{{ .Name }}.local
+```
+{{ end -}}
+### Start the Environment
+
+```bash
+make up
+```
+
+Application:
+
+```text
+{{ if .Traefik }}https://{{ .Name }}.local{{ else }}http://localhost{{ end }}
+```
+{{ if .Traefik -}}
+Traefik Dashboard:
+
+```text
+http://localhost:8080
+```
+{{ end -}}
+---
+
+## Make Commands
+
+### Display Available Commands
+
+```bash
+make help
+```
+
+### Build Containers
+
+```bash
+make build
+```
+
+### Start Containers
+
+```bash
+make up
+```
+
+### Stop Containers
+
+```bash
+make down
+```
+
+### Restart Environment
+
+```bash
+make restart
+```
+
+### View Logs
+
+```bash
+make logs
+```
+
+### List Containers
+
+```bash
+make ps
+```
+
+### Access PHP Container
+
+```bash
+make bash
+```
+
+### Run Code Style Check
+
+```bash
+make pint
+```
+
+### Fix Code Style Issues
+
+```bash
+make pintf
+```
+
+### Run Static Analysis
+
+```bash
+make stan
+```
+
+---
+
+## Database
+
+### Create Database
+
+```bash
+php bin/console doctrine:database:create
+```
+
+### Generate Migration
+
+```bash
+php bin/console make:migration
+```
+
+### Execute Migration
+
+```bash
+php bin/console doctrine:migrations:migrate
+```
+
+---
+{{ if .Mailpit -}}
+## Mailpit
+
+Mailpit captures all outgoing emails.
+
+Access:
+
+```text
+https://mail.{{ .Name }}.local
+```
+
+---
+{{ end -}}
+{{ if .Redis -}}
+## Redis
+
+Redis is used for:
+
+* Cache
+* Sessions
+* Messenger transports
+* Rate limiting
+
+---
+{{ end -}}
+## Project Structure
+
+```text
+{{ .Name }}/
+{{- if .Traefik }}
+├── traefik/
+├── certs/
+{{- end }}
+├── docker/
+│   ├── nginx/
+│   └── php/
+│
+├── docs/
+│
+├── app/
+│   ├── config/
+│   ├── public/
+│   ├── src/
+│   ├── templates/
+│   └── vendor/
+│
+├── docker-compose.yml
+├── Makefile
+└── README.md
+```
+
+---
+
+## License
+
+MIT

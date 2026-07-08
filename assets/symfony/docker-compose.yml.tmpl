@@ -1,0 +1,131 @@
+services:
+{{- if .Traefik }}
+    traefik:
+        image: traefik:v3.4
+        container_name: {{ .Name }}_traefik
+        command:
+            - --configFile=/etc/traefik/traefik.yml
+        ports:
+            - "80:80"
+            - "443:443"
+            - "8080:8080"
+        volumes:
+            - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+            - ./traefik/dynamic.yml:/etc/traefik/dynamic.yml:ro
+            - ./certs:/certs
+        networks:
+            - frontend
+{{- end }}
+
+    php:
+        build:
+            context: .
+            dockerfile: docker/php/Dockerfile
+        container_name: {{ .Name }}_php
+        volumes:
+            - ./:/var/www/html
+        networks:
+            - application
+            - database
+
+    nginx:
+        image: nginx:alpine
+        container_name: {{ .Name }}_nginx
+        volumes:
+            - ./:/var/www/html
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - php
+{{- if .Traefik }}
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.{{ .Name }}.rule=Host(`{{ .Name }}.local`)
+            - traefik.http.routers.{{ .Name }}.entrypoints=web,websecure
+            - traefik.http.routers.{{ .Name }}.tls=true
+            - traefik.http.services.{{ .Name }}.loadbalancer.server.port=80
+{{- end }}
+        networks:
+            - frontend
+            - application
+{{- if eq .Database "postgres" }}
+
+    database:
+        image: postgres:17-alpine
+        container_name: {{ .Name }}_database
+        environment:
+            POSTGRES_DB: ${DB_DATABASE}
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            - database_data:/var/lib/postgresql/data
+        networks:
+            - database
+{{- else }}
+
+    database:
+        image: {{ if eq .Database "mysql" }}mysql:8.4{{ else }}mariadb:11.8{{ end }}
+        container_name: {{ .Name }}_database
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_USER: ${DB_USER}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            - database_data:/var/lib/mysql
+        networks:
+            - database
+{{- end }}
+{{- if ne .Database "postgres" }}
+
+    # phpMyAdmin only supports MySQL-compatible engines (MariaDB/MySQL).
+    phpmyadmin:
+        image: phpmyadmin:5.2
+        container_name: {{ .Name }}_phpmyadmin
+        depends_on:
+            - database
+        environment:
+            PMA_HOST: database
+            PMA_PORT: 3306
+            PMA_ABSOLUTE_URI: https://db.{{ .Name }}.local/
+{{- if .Traefik }}
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.phpmyadmin.rule=Host(`db.{{ .Name }}.local`)
+            - traefik.http.routers.phpmyadmin.entrypoints=websecure
+            - traefik.http.routers.phpmyadmin.tls=true
+            - traefik.http.services.phpmyadmin.loadbalancer.server.port=80
+{{- end }}
+        networks:
+            - frontend
+            - database
+{{- end }}
+{{- if .Mailpit }}
+
+    mailpit:
+        image: axllent/mailpit
+        container_name: {{ .Name }}_mailpit
+{{- if .Traefik }}
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.mailpit.rule=Host(`mail.{{ .Name }}.local`)
+            - traefik.http.services.mailpit.loadbalancer.server.port=8025
+{{- end }}
+        networks:
+            - frontend
+{{- end }}
+{{- if .Redis }}
+
+    redis:
+        image: redis:7-alpine
+        container_name: {{ .Name }}_redis
+        networks:
+            - application
+{{- end }}
+
+volumes:
+    database_data:
+
+networks:
+    frontend:
+    application:
+    database:
