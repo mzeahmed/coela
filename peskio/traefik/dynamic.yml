@@ -1,0 +1,45 @@
+http:
+  routers:
+    peskio:
+      rule: Host(`peskio.local`)
+      entryPoints:
+        - web
+        - websecure
+      service: peskio
+      tls: { }
+
+    mailpit:
+      rule: Host(`mail.peskio.local`)
+      entryPoints:
+        - web
+        - websecure
+      service: mailpit
+      tls: { }
+
+    phpmyadmin:
+      rule: Host(`db.peskio.local`)
+      entryPoints:
+        - websecure
+      service: phpmyadmin
+      tls: { }
+
+  services:
+    peskio:
+      loadBalancer:
+        servers:
+          - url: http://nginx:80
+
+    mailpit:
+      loadBalancer:
+        servers:
+          - url: http://mailpit:8025
+
+    phpmyadmin:
+      loadBalancer:
+        servers:
+          - url: http://phpmyadmin:80
+
+tls:
+  certificates:
+    - certFile: /certs/peskio.local.pem
+      keyFile: /certs/peskio.local-key.pem

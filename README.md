@@ -33,28 +33,9 @@ Current features:
 
 ## Project Structure
 
-A generated project looks like this:
+Coela generates a ready-to-use project: Docker Compose, Nginx, PHP-FPM, Traefik (optional), and the installed framework itself under `app/`.
 
-```text
-bookingapp/
-
-├── app/
-├── certs/
-├── docker/
-│   ├── nginx/
-│   └── php/
-├── docs/
-├── traefik/
-├── docker-compose.yml
-├── Makefile
-├── README.md
-└── .gitignore
-```
-
-The `app/` directory contains the selected framework:
-
-- Symfony
-- WordPress Bedrock
+See [Project Structure](docs/project-structure.md) for the full generated layout.
 
 ---
 
@@ -77,38 +58,6 @@ A generated project should work immediately without requiring manual configurati
 ### Developer Experience First
 
 The CLI should save time, reduce boilerplate and provide a consistent project structure.
-
----
-
-## Roadmap
-
-### Version 1
-
-- [x] Symfony
-- [x] WordPress (Bedrock)
-- [x] Docker
-- [x] Traefik
-- [x] HTTPS
-- [x] Docker Compose
-- [x] Makefile
-- [x] Automatic installation
-- [x] MySQL / PostgreSQL
-
-### Version 2
-
-- [ ] Laravel
-- [ ] Meilisearch
-- [ ] Mercure
-- [ ] RabbitMQ
-- [ ] MongoDB
-- [ ] Elasticsearch
-
-### Version 3
-
-- [ ] Custom stacks
-- [ ] Plugin system
-- [ ] Configuration file
-- [ ] Update existing projects
 
 ---
 
@@ -166,55 +115,23 @@ Coela will then:
 
 ## Development
 
-Clone the repository:
+Clone the repository and run it from source:
 
 ```bash
 git clone https://github.com/mzeahmed/coela.git
-
 cd coela
-```
-
-Run the CLI:
-
-```bash
 go run . new
 ```
 
-Build:
-
-```bash
-go build -o coela
-```
+See [Development](docs/development.md) for the full local workflow (format, vet, test, build, install).
 
 ---
 
 ## Architecture
 
-The project intentionally follows a simple architecture.
+Coela follows a small, single-responsibility package layout — `cmd/`, `internal/project`, `internal/scaffold`, `internal/stacks/*`, `internal/ui`, and `internal/traefik`.
 
-```
-cmd/
-
-internal/
-
-    scaffold/
-
-    project/
-
-    stacks/
-
-        symfony/
-
-        wordpress/
-
-    ui/
-```
-
-Every package has a single responsibility.
-
-No unnecessary abstractions.
-
-The project evolves only when a real need appears.
+See [Architecture](docs/architecture.md) for the full breakdown and the `coela new` workflow.
 
 ---
 
@@ -225,6 +142,20 @@ Because creating the same Docker configuration over and over again is boring.
 Developers should spend time building applications, not copying boilerplate.
 
 Coela automates the repetitive work while keeping the generated project clean, understandable and customizable.
+
+---
+
+## Documentation
+
+Detailed, technical documentation lives in [`docs/`](docs/):
+
+- [Architecture](docs/architecture.md) — packages, responsibilities, and the `coela new` workflow.
+- [Development](docs/development.md) — the local Go workflow (format, vet, test, build, install).
+- [Versioning](docs/versioning.md) — how Coela's version numbers are chosen.
+- [Release Process](docs/release.md) — the steps to cut a new release.
+- [Templates](docs/templates.md) — how templates are structured and rendered, and how to add one.
+- [Roadmap](docs/roadmap.md) — what's planned for upcoming versions.
+- [Project Structure](docs/project-structure.md) — what a generated project looks like, and why.
 
 ---
 
