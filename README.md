@@ -2,8 +2,6 @@
 
 > From zero to a ready-to-code PHP project.
 
-> **Create a fully working development environment with a single command.**
-
 [![CI](https://github.com/mzeahmed/coela/actions/workflows/ci.yml/badge.svg)](https://github.com/mzeahmed/coela/actions/workflows/ci.yml)
 [![Release](https://github.com/mzeahmed/coela/actions/workflows/release.yml/badge.svg)](https://github.com/mzeahmed/coela/actions/workflows/release.yml)
 [![License](https://img.shields.io/github/license/mzeahmed/coela)](https://github.com/mzeahmed/coela/blob/main/LICENSE)
@@ -11,72 +9,99 @@
 [![Latest Release](https://img.shields.io/github/v/release/mzeahmed/coela)](https://github.com/mzeahmed/coela/releases/latest)
 [![Go](https://img.shields.io/badge/Go-1.26+-00ADD8?logo=go)](https://go.dev/)
 
-Coela is a CLI written in Go that scaffolds complete Docker-based development environments for modern PHP applications.
+Coela is a CLI written in Go that scaffolds complete, Docker-based PHP development environments. Instead of hand-writing Docker Compose files, Dockerfiles, Traefik configuration, and project structure every time, Coela generates all of it — and installs your framework of choice — with a single command.
 
-Instead of manually creating Docker Compose files, Dockerfiles, Traefik configuration, Makefiles and project structure every time, Coela generates everything for you.
+---
 
-The goal is simple:
+## Quick Start
+
+### 1. Download
+
+Get the latest release: **[github.com/mzeahmed/coela/releases/latest](https://github.com/mzeahmed/coela/releases/latest)**
+
+Download the archive for your OS, extract the `coela` binary, and put it on your `PATH`. See [Installation](#installation) below for the exact commands per platform.
+
+### 2. Verify
+
+```bash
+coela --help
+```
+
+### 3. Create a project
+
+```bash
+coela new
+```
+
+Coela generates a complete PHP development environment, ready to use.
 
 ---
 
 ## Features
 
-Current features:
-
-- Symfony support
-- WordPress (Bedrock) support
-- Docker Compose
-- Traefik
-- HTTPS local development
-- Nginx
-- PHP
-- MariaDB / MySQL / PostgreSQL
-- Mailpit
-- Redis (optional)
-- Ready-to-use project structure
-- Automatic framework installation
+- **Frameworks** — Symfony, WordPress (Bedrock)
+- **Infrastructure** — Docker Compose, Nginx, PHP-FPM
+- **Local HTTPS** — Traefik reverse proxy with automatically generated certificates
+- **Databases** — MariaDB, MySQL, or PostgreSQL
+- **Mailpit** — catches outgoing email locally
+- **Redis** — optional cache and session store
+- **Automatic installation** — the selected framework is installed for you
 
 ---
 
-## Project Structure
+## Supported Stacks
 
-Coela generates a ready-to-use project: Docker Compose, Nginx, PHP-FPM, Traefik (optional), and the installed framework itself under `app/`.
-
-See [Project Structure](docs/project-structure.md) for the full generated layout.
-
----
-
-## Philosophy
-
-Coela follows a few simple principles.
-
-### KISS
-
-Keep the project simple.
-
-### YAGNI
-
-Do not implement features before they are needed.
-
-### Convention over Configuration
-
-A generated project should work immediately without requiring manual configuration.
-
-### Developer Experience First
-
-The CLI should save time, reduce boilerplate and provide a consistent project structure.
+| Framework | Status |
+|---|---|
+| Symfony | ✅ Supported |
+| WordPress (Bedrock) | ✅ Supported |
+| Laravel | 🚧 Planned |
 
 ---
 
 ## Installation
 
-### Download
+### Download a binary
 
-Download the latest release from:
+Prebuilt binaries for Linux, macOS, and Windows are available on the [GitHub Releases](https://github.com/mzeahmed/coela/releases/latest) page. Pick the archive matching your OS and architecture (`amd64` or `arm64`).
 
-https://github.com/mzeahmed/coela/releases/latest
+#### Linux
 
-Linux, macOS, and Windows binaries are available in the GitHub Releases.
+```bash
+curl -LO https://github.com/mzeahmed/coela/releases/latest/download/coela_Linux_x86_64.tar.gz
+tar -xzf coela_Linux_x86_64.tar.gz
+sudo mv coela /usr/local/bin/
+coela --help
+```
+
+Use `coela_Linux_arm64.tar.gz` on ARM64 (Raspberry Pi, AWS Graviton, ...).
+
+#### macOS
+
+```bash
+curl -LO https://github.com/mzeahmed/coela/releases/latest/download/coela_Darwin_arm64.tar.gz
+tar -xzf coela_Darwin_arm64.tar.gz
+sudo mv coela /usr/local/bin/
+coela --help
+```
+
+Use `coela_Darwin_x86_64.tar.gz` on Intel Macs.
+
+Coela isn't notarized by Apple. If macOS refuses to run it ("cannot be opened because the developer cannot be verified"), clear the quarantine flag:
+
+```bash
+xattr -d com.apple.quarantine /usr/local/bin/coela
+```
+
+#### Windows (PowerShell)
+
+```powershell
+Invoke-WebRequest -Uri https://github.com/mzeahmed/coela/releases/latest/download/coela_Windows_x86_64.zip -OutFile coela.zip
+Expand-Archive coela.zip -DestinationPath .
+.\coela.exe --help
+```
+
+Use `coela_Windows_arm64.zip` on ARM64 devices. Move `coela.exe` to a folder of your choice and add that folder to your `PATH` (Settings → System → About → Advanced system settings → Environment Variables) to run `coela` from any terminal.
 
 ### Build from source
 
@@ -89,8 +114,6 @@ go install
 ---
 
 ## Usage
-
-Create a new project:
 
 ```bash
 coela new
@@ -122,12 +145,20 @@ Yes
 Yes
 ```
 
-Coela will then:
+Coela will automatically:
 
-- Create the project structure
-- Generate Docker configuration
-- Install the selected framework
-- Produce a ready-to-use development environment
+- create the project
+- generate Docker configuration
+- configure Traefik
+- install the selected framework
+
+---
+
+## Generated Project Structure
+
+Every generated project ships with Docker Compose, Nginx, PHP-FPM, optional Traefik, and the installed framework under `app/` — ready to run.
+
+See [Project Structure](docs/project-structure.md) for the full layout.
 
 ---
 
@@ -135,54 +166,55 @@ Coela will then:
 
 - Docker
 - Docker Compose
-- Go (only for development)
 - Composer
-
----
-
-## Development
-
-Clone the repository and run it from source:
-
-```bash
-git clone https://github.com/mzeahmed/coela.git
-cd coela
-go run . new
-```
-
-See [Development](docs/development.md) for the full local workflow (format, vet, test, build, install).
-
----
-
-## Architecture
-
-Coela follows a small, single-responsibility package layout — `cmd/`, `internal/project`, `internal/scaffold`, `internal/stacks/*`, `internal/ui`, and `internal/traefik`.
-
-See [Architecture](docs/architecture.md) for the full breakdown and the `coela new` workflow.
-
----
-
-## Why Coela?
-
-Because creating the same Docker configuration over and over again is boring.
-
-Developers should spend time building applications, not copying boilerplate.
-
-Coela automates the repetitive work while keeping the generated project clean, understandable and customizable.
+- Go (only if building from source)
 
 ---
 
 ## Documentation
 
-Detailed, technical documentation lives in [`docs/`](docs/):
+| Guide | Description |
+|---|---|
+| [Architecture](docs/architecture.md) | Packages, responsibilities, and the `coela new` workflow |
+| [Development](docs/development.md) | Local Go workflow — format, vet, test, build, install |
+| [Versioning](docs/versioning.md) | How version numbers are chosen |
+| [Release Process](docs/release.md) | Steps to cut a new release |
+| [Templates](docs/templates.md) | How templates are structured and rendered |
+| [Roadmap](docs/roadmap.md) | What's planned for upcoming versions |
+| [Project Structure](docs/project-structure.md) | What a generated project looks like |
 
-- [Architecture](docs/architecture.md) — packages, responsibilities, and the `coela new` workflow.
-- [Development](docs/development.md) — the local Go workflow (format, vet, test, build, install).
-- [Versioning](docs/versioning.md) — how Coela's version numbers are chosen.
-- [Release Process](docs/release.md) — the steps to cut a new release.
-- [Templates](docs/templates.md) — how templates are structured and rendered, and how to add one.
-- [Roadmap](docs/roadmap.md) — what's planned for upcoming versions.
-- [Project Structure](docs/project-structure.md) — what a generated project looks like, and why.
+---
+
+## Architecture
+
+Coela follows a small, single-responsibility package layout: `cmd/`, `internal/project`, `internal/scaffold`, `internal/stacks/*`, `internal/ui`, and `internal/traefik`.
+
+See [Architecture](docs/architecture.md) for the full breakdown.
+
+---
+
+## Philosophy
+
+- **KISS** — keep the project simple
+- **YAGNI** — don't implement features before they're needed
+- **Convention over Configuration** — a generated project works immediately, no manual setup
+- **Developer Experience First** — save time, reduce boilerplate
+
+---
+
+## Roadmap
+
+**Current**
+- ✅ Symfony
+- ✅ WordPress (Bedrock)
+
+**Next**
+- 🚧 Laravel
+
+**Later**
+- Additional integrations (Mercure, RabbitMQ, MongoDB, Elasticsearch, and more)
+
+See the full [Roadmap](docs/roadmap.md).
 
 ---
 

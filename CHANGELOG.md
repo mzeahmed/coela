@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.1.4]
+
+### Changed
+
+- README rewritten as a landing page: Quick Start, Supported Stacks table, per-OS installation steps (Linux, macOS — including the Gatekeeper quarantine fix — and Windows), and a reorganized Documentation, Roadmap, and Philosophy layout.
+
 ## [v0.1.1] - 2026-07-08
 
 ### Fixed
