@@ -2,13 +2,20 @@
 
 > From zero to a ready-to-code PHP project.
 
+> **Create a fully working development environment with a single command.**
+
+[![CI](https://github.com/mzeahmed/coela/actions/workflows/ci.yml/badge.svg)](https://github.com/mzeahmed/coela/actions/workflows/ci.yml)
+[![Release](https://github.com/mzeahmed/coela/actions/workflows/release.yml/badge.svg)](https://github.com/mzeahmed/coela/actions/workflows/release.yml)
+[![License](https://img.shields.io/github/license/mzeahmed/coela)](https://github.com/mzeahmed/coela/blob/main/LICENSE)
+[![Go Version](https://img.shields.io/github/go-mod/go-version/mzeahmed/coela)](https://github.com/mzeahmed/coela/blob/main/go.mod)
+[![Latest Release](https://img.shields.io/github/v/release/mzeahmed/coela)](https://github.com/mzeahmed/coela/releases/latest)
+[![Go](https://img.shields.io/badge/Go-1.26+-00ADD8?logo=go)](https://go.dev/)
+
 Coela is a CLI written in Go that scaffolds complete Docker-based development environments for modern PHP applications.
 
 Instead of manually creating Docker Compose files, Dockerfiles, Traefik configuration, Makefiles and project structure every time, Coela generates everything for you.
 
 The goal is simple:
-
-> **Create a fully working development environment with a single command.**
 
 ---
 
@@ -58,6 +65,26 @@ A generated project should work immediately without requiring manual configurati
 ### Developer Experience First
 
 The CLI should save time, reduce boilerplate and provide a consistent project structure.
+
+---
+
+## Installation
+
+### Download
+
+Download the latest release from:
+
+https://github.com/mzeahmed/coela/releases/latest
+
+Linux, macOS, and Windows binaries are available in the GitHub Releases.
+
+### Build from source
+
+```bash
+git clone https://github.com/mzeahmed/coela.git
+cd coela
+go install
+```
 
 ---
 

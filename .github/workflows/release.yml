@@ -1,0 +1,41 @@
+# Publishes a GitHub Release whenever a "vX.Y.Z" tag is pushed. Building,
+# packaging, and changelog generation are entirely handled by GoReleaser
+# (see .goreleaser.yaml). See docs/release.md for the steps to cut a
+# release.
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+# contents: write is what lets GoReleaser create the GitHub Release and
+# upload the built binaries to it. Nothing else is needed.
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # GoReleaser needs the full history and all tags to generate the
+          # changelog between the previous tag and this one.
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v7
+        with:
+          version: latest
+          args: release --clean
+        env:
+          COELA_CI_TOKEN: ${{ secrets.GITHUB_TOKEN }}

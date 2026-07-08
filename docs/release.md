@@ -2,6 +2,8 @@
 
 This document describes how a new version of Coela is released. See [versioning.md](versioning.md) for how version numbers are chosen.
 
+Pushing a `vX.Y.Z` tag is what triggers a release — everything after that is automated by `.github/workflows/release.yml` and [GoReleaser](https://goreleaser.com/) (see `.goreleaser.yaml`).
+
 ## Steps
 
 1. **Run the checks**
@@ -46,6 +48,8 @@ This document describes how a new version of Coela is released. See [versioning.
    git push origin vX.Y.Z
    ```
 
-## Future: GoReleaser
+   Pushing the tag triggers the `Release` workflow, which runs `goreleaser release --clean`. It builds the Linux, macOS, and Windows binaries, packages them, generates the checksums and changelog, and publishes the GitHub Release — automatically. Nothing else to do.
 
-Coela does not use [GoReleaser](https://goreleaser.com/) yet. Releases are currently produced manually with the steps above. GoReleaser is expected to automate binary builds and GitHub releases once the project's release surface stabilizes — this document will be updated when that happens.
+## What Happens in CI
+
+The `Release` workflow (`.github/workflows/release.yml`) only runs on tag pushes matching `v*`, never on branches. It checks out the full history (GoReleaser needs it to generate the changelog), installs Go, and runs GoReleaser via the official `goreleaser/goreleaser-action`, authenticated with the repository's built-in `GITHUB_TOKEN` — no custom secret is required.
