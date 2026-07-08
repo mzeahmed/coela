@@ -19,7 +19,7 @@ import (
 	"github.com/mzeahmed/coela/internal/ui"
 )
 
-// newCmd implements `stackforge new`.
+// newCmd implements `coela new`.
 //
 // The flow is: ask which stack to use, run that stack's interactive Wizard
 // to build a *project.Project, render the stack's templates on disk with

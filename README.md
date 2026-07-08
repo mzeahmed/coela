@@ -1,10 +1,10 @@
-# StackForge
+# Coela
 
 > From zero to a ready-to-code PHP project.
 
-StackForge is a CLI written in Go that scaffolds complete Docker-based development environments for modern PHP applications.
+Coela is a CLI written in Go that scaffolds complete Docker-based development environments for modern PHP applications.
 
-Instead of manually creating Docker Compose files, Dockerfiles, Traefik configuration, Makefiles and project structure every time, StackForge generates everything for you.
+Instead of manually creating Docker Compose files, Dockerfiles, Traefik configuration, Makefiles and project structure every time, Coela generates everything for you.
 
 The goal is simple:
 
@@ -23,7 +23,7 @@ Current features:
 - HTTPS local development
 - Nginx
 - PHP
-- MariaDB
+- MariaDB / MySQL / PostgreSQL
 - Mailpit
 - Redis (optional)
 - Ready-to-use project structure
@@ -60,7 +60,7 @@ The `app/` directory contains the selected framework:
 
 ## Philosophy
 
-StackForge follows a few simple principles.
+Coela follows a few simple principles.
 
 ### KISS
 
@@ -92,6 +92,7 @@ The CLI should save time, reduce boilerplate and provide a consistent project st
 - [x] Docker Compose
 - [x] Makefile
 - [x] Automatic installation
+- [x] MySQL / PostgreSQL
 
 ### Version 2
 
@@ -99,7 +100,6 @@ The CLI should save time, reduce boilerplate and provide a consistent project st
 - [ ] Meilisearch
 - [ ] Mercure
 - [ ] RabbitMQ
-- [ ] PostgreSQL
 - [ ] MongoDB
 - [ ] Elasticsearch
 
@@ -117,7 +117,7 @@ The CLI should save time, reduce boilerplate and provide a consistent project st
 Create a new project:
 
 ```bash
-stackforge new
+coela new
 ```
 
 The interactive wizard will ask:
@@ -146,7 +146,7 @@ Yes
 Yes
 ```
 
-StackForge will then:
+Coela will then:
 
 - Create the project structure
 - Generate Docker configuration
@@ -169,9 +169,9 @@ StackForge will then:
 Clone the repository:
 
 ```bash
-git clone https://github.com/mzeahmed/stackforge.git
+git clone https://github.com/mzeahmed/coela.git
 
-cd stackforge
+cd coela
 ```
 
 Run the CLI:
@@ -183,7 +183,7 @@ go run . new
 Build:
 
 ```bash
-go build -o stackforge
+go build -o coela
 ```
 
 ---
@@ -218,13 +218,13 @@ The project evolves only when a real need appears.
 
 ---
 
-## Why StackForge?
+## Why Coela?
 
 Because creating the same Docker configuration over and over again is boring.
 
 Developers should spend time building applications, not copying boilerplate.
 
-StackForge automates the repetitive work while keeping the generated project clean, understandable and customizable.
+Coela automates the repetitive work while keeping the generated project clean, understandable and customizable.
 
 ---
 

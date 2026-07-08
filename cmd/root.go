@@ -3,7 +3,7 @@ Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 
 */
 
-// Package cmd implements the StackForge command-line interface using Cobra.
+// Package cmd implements the Coela command-line interface using Cobra.
 //
 // It contains no business logic: each command only collects user input
 // (via internal/ui and a stack's Wizard) and delegates the actual work to
@@ -16,9 +16,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// rootCmd is the base command invoked when stackforge is called without any subcommand.
+// rootCmd is the base command invoked when coela is called without any subcommand.
 var rootCmd = &cobra.Command{
-	Use:   "stackforge",
+	Use:   "coela",
 	Short: "A brief description of your application",
 	Long: `A longer description that spans multiple lines and likely contains
 examples and usage of using your application. For example:
@@ -45,7 +45,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.stackforge.yaml)")
+	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.coela.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.

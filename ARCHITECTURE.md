@@ -1,8 +1,8 @@
-# StackForge Architecture
+# Coela Architecture
 
 ## Overview
 
-StackForge is a Go CLI that scaffolds complete PHP development environments.
+Coela is a Go CLI that scaffolds complete PHP development environments.
 
 Its goal is simple:
 
@@ -19,7 +19,7 @@ Laravel will be added in a future release.
 
 # Design Principles
 
-StackForge follows a pragmatic architecture.
+Coela follows a pragmatic architecture.
 
 We intentionally avoid unnecessary abstractions.
 
@@ -222,7 +222,7 @@ assets/
 # Project Generation Flow
 
 ```
-stackforge new
+coela new
 
         │
 
@@ -271,7 +271,7 @@ Ready to use
 
 # Generated Project
 
-StackForge generates the following structure.
+Coela generates the following structure.
 
 ```
 bookingapp/
@@ -367,9 +367,9 @@ Never before.
 
 # Philosophy
 
-StackForge is not a generic template engine.
+Coela is not a generic template engine.
 
-StackForge is a developer tool.
+Coela is a developer tool.
 
 Its mission is to eliminate repetitive project setup while producing clean, understandable and maintainable development environments.
 

@@ -1,8 +1,8 @@
-# Contributing to StackForge
+# Contributing to Coela
 
-First of all, thank you for contributing to StackForge ❤️
+First of all, thank you for contributing to Coela ❤️
 
-StackForge is an opinionated CLI that scaffolds complete PHP development environments.
+Coela is an opinionated CLI that scaffolds complete PHP development environments.
 
 Our goal is not to build the most flexible tool.
 
@@ -14,7 +14,7 @@ This document explains the development principles used throughout the project.
 
 # Philosophy
 
-StackForge follows one simple philosophy:
+Coela follows one simple philosophy:
 
 > Simplicity beats cleverness.
 
@@ -31,7 +31,7 @@ Good software grows through small, understandable steps.
 
 # Core Principles
 
-StackForge follows these principles:
+Coela follows these principles:
 
 - KISS (Keep It Simple, Stupid)
 - YAGNI (You Aren't Gonna Need It)
