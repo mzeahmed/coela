@@ -24,8 +24,9 @@ import (
 // The flow is: ask which stack to use, run that stack's interactive Wizard
 // to build a *project.Project, render the stack's templates on disk with
 // scaffold.Generate, install the framework itself via the stack's Install
-// func, then, if Traefik was enabled, provision local HTTPS (mkcert
-// certificate + /etc/hosts entries) via the traefik package.
+// func, optionally point the installed framework at the scaffolded Docker
+// services (configureEnv), then, if Traefik was enabled, provision local
+// HTTPS (mkcert certificate + /etc/hosts entries) via the traefik package.
 var newCmd = &cobra.Command{
 	Use:   "new",
 	Short: "A brief description of your command",
@@ -47,6 +48,7 @@ to quickly create a Cobra application.`,
 			p            *project.Project
 			templatesDir string
 			install      func(string) error
+			configureEnv func(*project.Project) error
 		)
 
 		switch choice {
@@ -54,6 +56,7 @@ to quickly create a Cobra application.`,
 			p, err = symfony.Wizard()
 			templatesDir = symfony.TemplatesDir()
 			install = symfony.Install
+			configureEnv = symfony.ConfigureEnv
 		case "WordPress (Bedrock)":
 			p, err = wordpress.Wizard()
 			templatesDir = wordpress.TemplatesDir()
@@ -69,6 +72,12 @@ to quickly create a Cobra application.`,
 
 		if err := install(filepath.Join(p.Name, "app")); err != nil {
 			return err
+		}
+
+		if configureEnv != nil {
+			if err := configureEnv(p); err != nil {
+				return err
+			}
 		}
 
 		if p.Traefik {
