@@ -57,9 +57,11 @@ internal/
 
     stacks/
 
-    ui/
+        symfony/assets/
 
-assets/
+        wordpress/assets/
+
+    ui/
 
 docs/
 ```
@@ -245,11 +247,13 @@ use the standard library.
 
 # Templates
 
-All templates belong inside:
+All templates belong inside their stack's own directory:
 
 ```
-assets/
+internal/stacks/<stack>/assets/
 ```
+
+They are embedded into the binary at build time via `go:embed`, so `coela new` works from a standalone downloaded binary.
 
 Templates are resources.
 

@@ -4,30 +4,32 @@ Every file a stack generates comes from a template rendered by `internal/scaffol
 
 ## Location
 
-Templates are stored under `assets/`, one directory per stack, matching the stack's ID:
+Templates are stored under `internal/stacks/<stack-id>/assets/`, one directory per stack:
 
 ```
-assets/
+internal/stacks/
 ├── symfony/
-│   ├── docker-compose.yml.tmpl
-│   ├── .env.tmpl
-│   ├── .gitignore.tmpl
-│   ├── Makefile.tmpl
-│   ├── README.md.tmpl
-│   ├── docker/
-│   │   ├── nginx/
-│   │   │   └── default.conf.tmpl
-│   │   └── php/
-│   │       └── Dockerfile.tmpl
-│   └── traefik/
-│       ├── traefik.yml.tmpl
-│       └── dynamic.yml.tmpl
+│   └── assets/
+│       ├── docker-compose.yml.tmpl
+│       ├── .env.tmpl
+│       ├── .gitignore.tmpl
+│       ├── Makefile.tmpl
+│       ├── README.md.tmpl
+│       ├── docker/
+│       │   ├── nginx/
+│       │   │   └── default.conf.tmpl
+│       │   └── php/
+│       │       └── Dockerfile.tmpl
+│       └── traefik/
+│           ├── traefik.yml.tmpl
+│           └── dynamic.yml.tmpl
 └── wordpress/
+    └── assets/
 ```
 
-A stack only ever reads from its own subdirectory.
+A stack only ever reads from its own `assets/` subdirectory, which its `generate.go` embeds into the binary at build time with `//go:embed all:assets` (the `all:` prefix is required so dotfiles like `.env.tmpl` and `.gitignore.tmpl` are included — plain `go:embed` patterns skip files starting with `.` or `_`). This is what lets a downloaded `coela` binary run `coela new` standalone, without the source repo present on disk.
 
-> `assets/wordpress/` currently has no templates. The WordPress stack's `Wizard` and `Install` are implemented, but running it through `coela new` produces no scaffolded files until templates are added here — only the framework installed by Composer.
+> `internal/stacks/wordpress/assets/` currently has no templates. The WordPress stack's `Wizard` and `Install` are implemented, but running it through `coela new` produces no scaffolded files until templates are added here — only the framework installed by Composer.
 
 ## How Templates Are Rendered
 
@@ -38,7 +40,7 @@ A stack only ever reads from its own subdirectory.
 3. Executes it with the `*project.Project` itself as the template data.
 4. Writes the result to the generated project, at the same relative path, with the `.tmpl` suffix stripped.
 
-For example, `assets/symfony/docker/php/Dockerfile.tmpl` becomes `<project>/docker/php/Dockerfile`.
+For example, `internal/stacks/symfony/assets/docker/php/Dockerfile.tmpl` becomes `<project>/docker/php/Dockerfile`.
 
 Files that do not end in `.tmpl` (for example a placeholder `.gitkeep`) are skipped.
 
@@ -58,13 +60,13 @@ Because the `Project` struct itself is the template data, any exported field is 
 {{ end }}
 ```
 
-`assets/symfony/docker-compose.yml.tmpl` is the most complete example: it conditionally includes the Traefik, Mailpit, and Redis services, and switches the database service's image and environment variables based on `{{ .Database }}` (MariaDB, MySQL, or PostgreSQL).
+`internal/stacks/symfony/assets/docker-compose.yml.tmpl` is the most complete example: it conditionally includes the Traefik, Mailpit, and Redis services, and switches the database service's image and environment variables based on `{{ .Database }}` (MariaDB, MySQL, or PostgreSQL).
 
-Some values are intentionally not embedded directly in the template output. `docker-compose.yml.tmpl` references database credentials as `${DB_DATABASE}`, `${DB_USER}`, and so on — real shell-style variables resolved by Docker Compose from the sibling `.env` file at container start, not by Go's template engine. `assets/symfony/.env.tmpl` is what actually renders those values.
+Some values are intentionally not embedded directly in the template output. `docker-compose.yml.tmpl` references database credentials as `${DB_DATABASE}`, `${DB_USER}`, and so on — real shell-style variables resolved by Docker Compose from the sibling `.env` file at container start, not by Go's template engine. `internal/stacks/symfony/assets/.env.tmpl` is what actually renders those values.
 
 ## Adding a New Template
 
-1. Create the file under `assets/<stack>/`, ending in `.tmpl`, at the path you want it to appear in the generated project (minus the `.tmpl` suffix).
+1. Create the file under `internal/stacks/<stack>/assets/`, ending in `.tmpl`, at the path you want it to appear in the generated project (minus the `.tmpl` suffix).
 2. Use `{{ .FieldName }}` to reference any field on `project.Project`.
 3. If the file should only exist for certain wizard answers, wrap the relevant section in `{{ if ... }} ... {{ end }}`. `scaffold.Generate` has no concept of skipping a whole file conditionally — every `.tmpl` file found is always rendered and written; conditionals only affect content within a file.
 4. No Go code changes are required. `scaffold.Generate` discovers the new file automatically the next time it walks the stack's template directory.

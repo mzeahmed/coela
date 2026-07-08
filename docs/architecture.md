@@ -14,7 +14,7 @@ Abstractions are introduced only when a real, current need justifies them. Suppo
 
 ### Convention over Configuration
 
-A stack's templates always live at `assets/<stack-id>/`. A generated project is always written to a directory named after the project. There is nothing to configure beyond answering the wizard's questions.
+A stack's templates always live at `internal/stacks/<stack-id>/assets/`, embedded into the binary at build time via `go:embed`. A generated project is always written to a directory named after the project. There is nothing to configure beyond answering the wizard's questions.
 
 ## Packages
 
@@ -22,15 +22,15 @@ A stack's templates always live at `assets/<stack-id>/`. A generated project is 
 |---|---|
 | `cmd/` | Cobra CLI commands. Parses input and orchestrates the flow below. Contains no business logic. |
 | `internal/project` | Defines `Project`, the data model holding the answers collected by a wizard (name, stack, PHP version, database, and optional services). Holds no logic of its own. |
-| `internal/scaffold` | Renders a stack's template directory into real files on disk. Knows nothing about any specific stack — it only receives a `*project.Project` and a directory to walk. |
-| `internal/stacks/symfony`, `internal/stacks/wordpress` | One package per supported stack. Each owns its own wizard questions, its own template directory, and its own framework installation command. A stack never references another stack. |
+| `internal/scaffold` | Renders a stack's template filesystem into real files on disk. Knows nothing about any specific stack — it only receives a `*project.Project` and an `fs.FS` to walk. |
+| `internal/stacks/symfony`, `internal/stacks/wordpress` | One package per supported stack. Each owns its own wizard questions, its own embedded template directory, and its own framework installation command. A stack never references another stack. |
 | `internal/ui` | Terminal interaction primitives (`Input`, `Select`, `Confirm`) built on top of promptui. Knows nothing about `Project` or any stack. |
 | `internal/traefik` | Automates the local HTTPS setup for Traefik-fronted projects: generating an mkcert certificate and registering the project's domains in `/etc/hosts`. Knows nothing about any specific stack. |
 
 Each stack package exposes the same three functions, called by `cmd/new.go`:
 
 - `Wizard() (*project.Project, error)` — asks the stack-specific questions.
-- `TemplatesDir() string` — returns the path to the stack's template directory.
+- `TemplatesDir() fs.FS` — returns the stack's embedded template filesystem.
 - `Install(dir string) error` — installs the framework itself (via Composer).
 
 There is no shared interface between stacks; `cmd/new.go` selects the right set of functions with a plain `switch` on the user's choice.

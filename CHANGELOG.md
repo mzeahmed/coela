@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.1.5]
+
+### Fixed
+
+- `coela new` failed with `Error: lstat assets/symfony: no such file or directory` when run from a binary downloaded off GitHub Releases, because stack templates were read from a path (`assets/<stack>/`) relative to the current working directory instead of being bundled into the binary. Templates now live under `internal/stacks/<stack>/assets/` and are embedded at build time via `go:embed`, so `coela new` works standalone regardless of the working directory.
+
+### Changed
+
+- Release CI now pins `goreleaser-action` to GoReleaser `v2.17.0` instead of `latest`, so a release build can't silently pick up a new GoReleaser version and behave differently.
+
 ## [v0.1.4]
 
 ### Changed

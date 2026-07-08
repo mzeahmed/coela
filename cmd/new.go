@@ -7,6 +7,7 @@ package cmd
 
 import (
 	"fmt"
+	"io/fs"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
@@ -46,7 +47,7 @@ to quickly create a Cobra application.`,
 		// below is the only place that knows both stacks exist.
 		var (
 			p            *project.Project
-			templatesDir string
+			templatesDir fs.FS
 			install      func(string) error
 			configureEnv func(*project.Project) error
 		)
