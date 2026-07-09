@@ -8,6 +8,7 @@ package cmd
 import (
 	"fmt"
 	"io/fs"
+	"os"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
@@ -19,6 +20,18 @@ import (
 	"github.com/mzeahmed/coela/internal/traefik"
 	"github.com/mzeahmed/coela/internal/ui"
 )
+
+// devOutputDir, when non-empty, is the directory (relative to the current
+// working directory) every `coela new` run generates its project under,
+// instead of directly at the working directory. It exists so running the
+// CLI from its own source tree (`go run .`, a plain `go build`) confines
+// every generated project to one single, gitignored directory instead of
+// scattering them across the coela repository itself.
+//
+// Release builds force this back to "" via ldflags (see .goreleaser.yaml),
+// so an installed `coela` binary always generates in the current working
+// directory — this redirection is a development-only convenience.
+var devOutputDir = "tmp"
 
 // newCmd implements `coela new`.
 //
@@ -39,6 +52,16 @@ database, and optional Redis, Mailpit, and Traefik support, then generates
 the Docker Compose setup, Nginx and PHP-FPM configuration, and installs the
 selected framework — ready to use.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if devOutputDir != "" {
+			if err := os.MkdirAll(devOutputDir, 0755); err != nil {
+				return err
+			}
+
+			if err := os.Chdir(devOutputDir); err != nil {
+				return err
+			}
+		}
+
 		choice, err := ui.Select("Stack", []string{"Symfony", "WordPress (Bedrock)"})
 		if err != nil {
 			return err

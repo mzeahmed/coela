@@ -178,7 +178,7 @@ See [Project Structure](docs/project-structure.md) for the full layout.
 | Guide | Description |
 |---|---|
 | [Architecture](docs/architecture.md) | Packages, responsibilities, and the `coela new` workflow |
-| [Development](docs/development.md) | Local Go workflow — format, vet, test, build, install |
+| [Development](docs/development.md) | Local Go workflow and `Makefile` commands — format, vet, test, build, install |
 | [Versioning](docs/versioning.md) | How version numbers are chosen |
 | [Release Process](docs/release.md) | Steps to cut a new release |
 | [Templates](docs/templates.md) | How templates are structured and rendered |

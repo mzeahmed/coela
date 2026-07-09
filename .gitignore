@@ -5,3 +5,9 @@
 
 # Added by goreleaser init:
 dist/
+
+# `coela new` output when run from source (go run ., a plain go build) —
+# see cmd.devOutputDir.
+/tmp/
+
+/bin/

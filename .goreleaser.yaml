@@ -22,9 +22,12 @@ builds:
       - amd64
       - arm64
     # Injects version metadata into main's package-level vars, consumed
-    # later by a `coela version` command.
+    # later by a `coela version` command. Also forces cmd.devOutputDir back
+    # to "": that var redirects `coela new`'s output into a gitignored
+    # directory for developers running the CLI from source, but a released
+    # binary must always generate in the current working directory.
     ldflags:
-      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X github.com/mzeahmed/coela/cmd.devOutputDir=
 
 archives:
   - formats: [tar.gz]
