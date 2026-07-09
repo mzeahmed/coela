@@ -6,6 +6,9 @@ name: CI
 # Run on every push and every pull request, regardless of branch.
 on:
   push:
+    branches:
+      - main
+
   pull_request:
 
 # Read-only checkout is all this workflow needs.

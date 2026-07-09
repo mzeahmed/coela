@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [v0.1.5]
+## [v0.1.6] 2026-07-09
+
+### Changed
+
+- `coela` and `coela new` now show a real description and usage instead of the Cobra boilerplate (`Short`/`Long` help text).
+
+## [v0.1.5] 2026-07-08
 
 ### Fixed
 
@@ -12,7 +18,7 @@ All notable changes to this project will be documented in this file.
 
 - Release CI now pins `goreleaser-action` to GoReleaser `v2.17.0` instead of `latest`, so a release build can't silently pick up a new GoReleaser version and behave differently.
 
-## [v0.1.4]
+## [v0.1.4] 2026-07-08
 
 ### Changed
 
