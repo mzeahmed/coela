@@ -1,0 +1,56 @@
+http:
+  routers:
+    {{ .Name }}:
+      rule: Host(`{{ .Name }}.local`)
+      entryPoints:
+        - web
+        - websecure
+      service: {{ .Name }}
+      tls: { }
+
+{{- if .Mailpit }}
+
+    mailpit:
+      rule: Host(`mail.{{ .Name }}.local`)
+      entryPoints:
+        - web
+        - websecure
+      service: mailpit
+      tls: { }
+{{- end }}
+
+{{- if ne .Database "postgres" }}
+
+    phpmyadmin:
+      rule: Host(`db.{{ .Name }}.local`)
+      entryPoints:
+        - websecure
+      service: phpmyadmin
+      tls: { }
+{{- end }}
+
+  services:
+    {{ .Name }}:
+      loadBalancer:
+        servers:
+          - url: http://nginx:80
+{{- if .Mailpit }}
+
+    mailpit:
+      loadBalancer:
+        servers:
+          - url: http://mailpit:8025
+{{- end }}
+
+{{- if ne .Database "postgres" }}
+
+    phpmyadmin:
+      loadBalancer:
+        servers:
+          - url: http://phpmyadmin:80
+{{- end }}
+
+tls:
+  certificates:
+    - certFile: /certs/{{ .Name }}.local.pem
+      keyFile: /certs/{{ .Name }}.local-key.pem
