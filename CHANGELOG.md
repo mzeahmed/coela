@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Running `coela new` from source (`go run .`, a plain `go build`) now generates projects under `tmp/` (gitignored) instead of the repo root, so iterating on the CLI doesn't scatter generated projects across the coela source tree. Release binaries are unaffected: they always generate in the current working directory (`cmd.devOutputDir` is forced back to `""` via `.goreleaser.yaml`'s ldflags).
+
 ## [v0.1.6] 2026-07-09
 
 ### Added

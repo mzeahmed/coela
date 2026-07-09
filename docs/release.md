@@ -9,12 +9,10 @@ Pushing a `vX.Y.Z` tag is what triggers a release — everything after that is a
 1. **Run the checks**
 
    ```bash
-   go fmt ./...
-   go vet ./...
-   go test ./...
+   make check
    ```
 
-   See [development.md](development.md) for what each command does. Coela does not have a `make check` target yet — until it does, run these three commands individually.
+   Runs `go fmt`, `go vet`, and `go test` — see [development.md](development.md) for what each does. `make release-snapshot` additionally simulates a full GoReleaser release locally (build, archive, checksums), without publishing anything.
 
 2. **Update the README if necessary**
 
