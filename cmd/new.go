@@ -30,13 +30,14 @@ import (
 // HTTPS (mkcert certificate + /etc/hosts entries) via the traefik package.
 var newCmd = &cobra.Command{
 	Use:   "new",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Scaffold a new PHP project",
+	Long: `Runs an interactive wizard to scaffold a complete, Docker-based PHP
+development environment.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+It asks for the framework (Symfony, WordPress/Bedrock), PHP version,
+database, and optional Redis, Mailpit, and Traefik support, then generates
+the Docker Compose setup, Nginx and PHP-FPM configuration, and installs the
+selected framework — ready to use.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		choice, err := ui.Select("Stack", []string{"Symfony", "WordPress (Bedrock)"})
 		if err != nil {

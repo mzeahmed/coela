@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   ci:
-    name: Build and Test
+    name: CI
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
