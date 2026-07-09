@@ -1,5 +1,7 @@
 # Coela
 
+> Pronounced "séla".
+
 > From zero to a ready-to-code PHP project.
 
 [![CI](https://github.com/mzeahmed/coela/actions/workflows/ci.yml/badge.svg)](https://github.com/mzeahmed/coela/actions/workflows/ci.yml)
