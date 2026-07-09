@@ -63,6 +63,7 @@ selected framework — ready to use.`,
 			p, err = wordpress.Wizard()
 			templatesDir = wordpress.TemplatesDir()
 			install = wordpress.Install
+			configureEnv = wordpress.ConfigureEnv
 		}
 		if err != nil {
 			return err

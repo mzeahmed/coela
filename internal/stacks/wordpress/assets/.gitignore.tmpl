@@ -1,0 +1,48 @@
+
+###> Phpstorm / Intelijj ###
+/.idea/
+/.vscode/
+###< Phpstorm / Intelijj ###
+
+###> Other ###
+/certs/*.pem
+###< Other ###
+
+###> coela ###
+/.env
+###< coela ###
+
+# Application
+app/web/app/plugins/*
+!app/web/app/plugins/.gitkeep
+# Ignore Composer-installed mu-plugin directories; single-file mu-plugins are tracked intentionally
+app/web/app/mu-plugins/*/
+app/web/app/themes/twentytwentyfive/
+app/web/app/upgrade
+app/web/app/uploads/*
+!app/web/app/uploads/.gitkeep
+app/web/app/cache/*
+
+# WordPress
+app/web/wp
+app/web/.htaccess
+
+# Logs
+*.log
+
+# Dotenv
+app/.env
+app/.env.*
+!app/.env.example
+
+# Composer
+app/vendor
+app/auth.json
+
+# PHPUnit/Pest
+app/phpunit.xml
+app/.phpunit.result.cache
+app/.phpunit.cache
+
+# WP-CLI
+app/wp-cli.local.yml

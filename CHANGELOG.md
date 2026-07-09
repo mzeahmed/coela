@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [v0.1.6] 2026-07-09
 
+### Added
+
+- WordPress (Bedrock) projects now get `app/.env` auto-configured after install, mirroring what Symfony projects already had: `DATABASE_URL` set to a DSN matching the scaffolded database service, `WP_HOME`/`WP_SITEURL`/`WP_ENV` set from the wizard's answers (Traefik on/off), and a fresh, unique set of WordPress secret keys/salts generated per project instead of Bedrock's shared `generateme` placeholders.
+- A root `.env.tmpl` and `.gitignore.tmpl` for the WordPress stack, so `DB_DATABASE`/`DB_USER`/`DB_PASSWORD`/`DB_ROOT_PASSWORD` are available to `docker-compose.yml` and the generated root `.env` isn't tracked — WordPress projects only had these for the Symfony stack until now.
+
 ### Changed
 
 - `coela` and `coela new` now show a real description and usage instead of the Cobra boilerplate (`Short`/`Long` help text).
