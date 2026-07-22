@@ -2,12 +2,6 @@
 
 All notable changes to this project will be documented in this file.
 
-## [v0.2.2] 2026-07-22
-
-### Added
-
-- `coela new` now prints `> coela new` at the very top before the wizard starts, so it stays visible as a header throughout the whole interactive flow, and prints `Creating project...` once the wizard is done answering questions and scaffolding begins.
-
 ## [v0.2.1] 2026-07-22
 
 ### Fixed
