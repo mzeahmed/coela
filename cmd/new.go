@@ -52,6 +52,8 @@ database, and optional Redis, Mailpit, and Traefik support, then generates
 the Docker Compose setup, Nginx and PHP-FPM configuration, and installs the
 selected framework — ready to use.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		fmt.Println("> coela new")
+
 		if devOutputDir != "" {
 			if err := os.MkdirAll(devOutputDir, 0755); err != nil {
 				return err
@@ -91,6 +93,8 @@ selected framework — ready to use.`,
 		if err != nil {
 			return err
 		}
+
+		fmt.Println("Creating project...")
 
 		if err := scaffold.Generate(p, templatesDir); err != nil {
 			return err
