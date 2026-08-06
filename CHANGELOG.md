@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.2.4] 2026-08-06
+
+### Added
+
+- WordPress (Bedrock) projects can now choose Nginx or Apache as their web server. Nginx keeps the existing PHP-FPM setup, while Apache uses `php-apache` with `mod_rewrite`, a dedicated virtual host, updated Traefik routing, and a generated `web/.htaccess` after Bedrock installation.
+
 ## [v0.2.1] 2026-07-22
 
 ### Fixed

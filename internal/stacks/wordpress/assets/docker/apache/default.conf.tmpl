@@ -1,0 +1,14 @@
+<VirtualHost *:80>
+    ServerName {{ .Name }}.local
+    DocumentRoot /var/www/html/web
+
+    <Directory /var/www/html/web>
+        Options FollowSymLinks
+        AllowOverride All
+        Require all granted
+        DirectoryIndex index.php
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/project_error.log
+    CustomLog ${APACHE_LOG_DIR}/project_access.log combined
+</VirtualHost>

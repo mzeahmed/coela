@@ -24,10 +24,25 @@ services:
         container_name: {{ .Name }}_php
         volumes:
             - ./app:/var/www/html
+{{- if eq .WebServer "apache" }}
+            - ./docker/apache/default.conf:/etc/apache2/sites-available/000-default.conf
+{{- if .Traefik }}
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.{{ .Name }}.rule=Host(`{{ .Name }}.local`)
+            - traefik.http.routers.{{ .Name }}.entrypoints=web,websecure
+            - traefik.http.routers.{{ .Name }}.tls=true
+            - traefik.http.services.{{ .Name }}.loadbalancer.server.port=80
+{{- end }}
+{{- end }}
         networks:
+{{- if eq .WebServer "apache" }}
+            - frontend
+{{- end }}
             - application
             - database
 
+{{- if ne .WebServer "apache" }}
     nginx:
         image: nginx:alpine
         container_name: {{ .Name }}_nginx
@@ -47,6 +62,7 @@ services:
         networks:
             - frontend
             - application
+{{- end }}
 {{- if eq .Database "postgres" }}
 
     database:

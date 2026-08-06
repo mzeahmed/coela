@@ -21,6 +21,9 @@ type Project struct {
 	PHPVersion string
 	// Database is the database engine selected in the wizard.
 	Database Database
+	// WebServer is the HTTP server selected for the project. An empty value
+	// means the stack does not expose a choice.
+	WebServer WebServer
 	// Redis reports whether the Redis service should be enabled.
 	Redis bool
 	// Mailpit reports whether the Mailpit service should be enabled.
@@ -39,6 +42,11 @@ func (p Project) String() string {
 	fmt.Fprintf(&b, "Stack      : %s\n", p.Stack)
 	fmt.Fprintf(&b, "PHP        : %s\n", p.PHPVersion)
 	fmt.Fprintf(&b, "Database   : %s\n", p.Database)
+
+	if p.WebServer != "" {
+		fmt.Fprintf(&b, "Web server : %s\n", p.WebServer)
+	}
+
 	fmt.Fprintf(&b, "Redis      : %s\n", yesNo(p.Redis))
 	fmt.Fprintf(&b, "Mailpit    : %s\n", yesNo(p.Mailpit))
 	fmt.Fprintf(&b, "Traefik    : %s\n", yesNo(p.Traefik))

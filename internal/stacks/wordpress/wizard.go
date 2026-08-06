@@ -26,6 +26,21 @@ func Wizard() (*project.Project, error) {
 		return nil, err
 	}
 
+	webServers := map[string]project.WebServer{
+		"Nginx":  project.WebServerNginx,
+		"Apache": project.WebServerApache,
+	}
+
+	webServerLabel, err := ui.Select("Web server", []string{"Nginx", "Apache"})
+	if err != nil {
+		return nil, err
+	}
+
+	webServer, ok := webServers[webServerLabel]
+	if !ok {
+		return nil, fmt.Errorf("unknown web server: %s", webServerLabel)
+	}
+
 	databases := map[string]project.Database{
 		"MariaDB":    project.DatabaseMariaDB,
 		"MySQL":      project.DatabaseMySQL,
@@ -62,6 +77,7 @@ func Wizard() (*project.Project, error) {
 		Stack:      project.StackWordPress,
 		PHPVersion: phpVersion,
 		Database:   database,
+		WebServer:  webServer,
 		Redis:      redis,
 		Mailpit:    mailpit,
 		Traefik:    traefik,
