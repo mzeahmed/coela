@@ -33,7 +33,7 @@ http:
     {{ .Name }}:
       loadBalancer:
         servers:
-          - url: http://nginx:80
+          - url: http://{{ if eq .WebServer "apache" }}php{{ else }}nginx{{ end }}:80
 {{- if .Mailpit }}
 
     mailpit:

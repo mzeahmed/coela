@@ -46,8 +46,26 @@ func ConfigureEnv(p *project.Project) error {
 	// and DB_HOST variables" note.
 	env = commentOutLines(env, []string{"DB_NAME", "DB_USER", "DB_PASSWORD"})
 
-	return os.WriteFile(filepath.Join(appDir, ".env"), []byte(env), 0644)
+	if err := os.WriteFile(filepath.Join(appDir, ".env"), []byte(env), 0644); err != nil {
+		return err
+	}
+
+	if p.WebServer == project.WebServerApache {
+		return os.WriteFile(filepath.Join(appDir, "web", ".htaccess"), []byte(apacheHTAccess), 0644)
+	}
+
+	return nil
 }
+
+const apacheHTAccess = `<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    RewriteRule ^index\.php$ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.php [L]
+</IfModule>
+`
 
 // commentOutLines prefixes with "# " every not-already-commented line
 // assigning one of keys.
