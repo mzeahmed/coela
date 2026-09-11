@@ -190,22 +190,40 @@ make ps
 make bash
 ```
 
-### Run Code Style Check
+### Check Automated Refactorings
 
 ```bash
-make pint
+make rector
+```
+
+### Apply Automated Refactorings
+
+```bash
+make rector-fix
+```
+
+### Check Code Style
+
+```bash
+make lint
 ```
 
 ### Fix Code Style Issues
 
 ```bash
-make pintf
+make lint-fix
 ```
 
 ### Run Static Analysis
 
 ```bash
 make stan
+```
+
+### Run All Quality Checks
+
+```bash
+make quality
 ```
 
 ---
