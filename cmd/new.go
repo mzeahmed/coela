@@ -74,7 +74,7 @@ selected framework — ready to use.`,
 		var (
 			p            *project.Project
 			templatesDir fs.FS
-			install      func(string) error
+			install      func(string, string, string) error
 			configureEnv func(*project.Project) error
 		)
 
@@ -87,7 +87,9 @@ selected framework — ready to use.`,
 		case "WordPress (Bedrock)":
 			p, err = wordpress.Wizard()
 			templatesDir = wordpress.TemplatesDir()
-			install = wordpress.Install
+			install = func(dir, _, _ string) error {
+				return wordpress.Install(dir)
+			}
 			configureEnv = wordpress.ConfigureEnv
 		}
 		if err != nil {
@@ -100,7 +102,7 @@ selected framework — ready to use.`,
 			return err
 		}
 
-		if err := install(filepath.Join(p.Name, "app")); err != nil {
+		if err := install(filepath.Join(p.Name, "app"), p.PHPVersion, p.Name); err != nil {
 			return err
 		}
 

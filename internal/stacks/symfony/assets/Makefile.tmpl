@@ -1,4 +1,4 @@
-.PHONY: help setup hosts build up down logs bash migration migrate run-pipeline alerts fix-perms
+.PHONY: help setup hosts build up down logs bash migration migrate run-pipeline alerts fix-perms rector rector-fix lint lint-fix stan quality
 
 COMPOSE = docker compose -f docker-compose.yml
 APP_CONTAINER = {{ .Name }}_php
@@ -101,20 +101,32 @@ fixtures: ## Load fixtures into the database
 	$(COMPOSE) exec php php app/bin/console doctrine:fixtures:load --no-interaction
 	@echo "$(GREEN)Fixtures loaded$(NO_COLOR)"
 
-pint: ## Run Pint in test mode
-	@echo "$(YELLOW)Running Pint...$(NO_COLOR)"
-	cd app && composer run lint
-	@echo "$(GREEN)Pint completed$(NO_COLOR)"
+rector: ## Check automated refactoring suggestions
+	@echo "$(YELLOW)Running Rector...$(NO_COLOR)"
+	cd app && composer run rector
+	@echo "$(GREEN)Rector completed$(NO_COLOR)"
 
-pintf: ## Run Pint with auto-fix
-	@echo "$(YELLOW)Running Pint with fixes...$(NO_COLOR)"
+rector-fix: ## Apply automated refactorings
+	@echo "$(YELLOW)Running Rector with fixes...$(NO_COLOR)"
+	cd app && composer run rector:fix
+	@echo "$(GREEN)Rector completed$(NO_COLOR)"
+
+lint: ## Check code style
+	@echo "$(YELLOW)Running PHP-CS-Fixer...$(NO_COLOR)"
+	cd app && composer run lint
+	@echo "$(GREEN)PHP-CS-Fixer completed$(NO_COLOR)"
+
+lint-fix: ## Fix code style issues
+	@echo "$(YELLOW)Running PHP-CS-Fixer with fixes...$(NO_COLOR)"
 	cd app && composer run lint:fix
-	@echo "$(GREEN)Pint completed$(NO_COLOR)"
+	@echo "$(GREEN)PHP-CS-Fixer completed$(NO_COLOR)"
 
 stan: ## Run PHPStan
 	@echo "$(YELLOW)Running PHPStan...$(NO_COLOR)"
-	./app/vendor/bin/phpstan analyse -c app/phpstan.neon
+	cd app && composer run stan
 	@echo "$(GREEN)PHPStan completed$(NO_COLOR)"
+
+quality: rector lint stan ## Run all quality checks
 
 # ========================
 # Assets
