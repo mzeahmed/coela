@@ -36,7 +36,11 @@ help: ## Show available commands
 		| awk 'BEGIN {FS = ":.*?## "}; {printf " %-28s %s\n", $$1, $$2}'
 	@echo ""
 
+{{- if .Traefik }}
+build: hosts ## Build containers
+{{- else }}
 build: ## Build containers
+{{- end }}
 	@echo "$(YELLOW)Building containers...$(NO_COLOR)"
 	$(COMPOSE) build
 	@echo "$(GREEN)Containers built$(NO_COLOR)"
